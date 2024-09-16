@@ -24,3 +24,5 @@ jobs:
       - name: Run Python script
         run: |
           python ValueStockJsonParse.py  # Update this with your script name
+env:
+    DROPBOX_ACCESS_TOKEN: ${{ secrets.DROPBOX_ACCESS_TOKEN }}
