@@ -284,7 +284,7 @@ def BuildAndSaveAdvancedDLevelInfo():
             logging.debug("DLevelAdvancedInfo has been Written to: " + Dlevel_Advanced_info)
 
             # Uploading the generated CSV to Dropbox
-            dropbox_path = f"/NSEBSEBhavcopy/ValueStocks"  # Adjust the Dropbox folder path as needed
+            dropbox_path = f"/NSEBSEBhavcopy/ValueStocks/{Dlevel_Advanced_info}"  # Adjust the Dropbox folder path as needed
             upload_to_dropbox(Dlevel_Advanced_info, dropbox_path)
 
         else:
