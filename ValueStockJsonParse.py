@@ -15,7 +15,7 @@ logging.basicConfig(filename="ValueStocksProcess.Log",level=logging.DEBUG,format
 
 
 # Dropbox access token (replace with your actual token)
-DROPBOX_ACCESS_TOKEN = 'sl.B9Cw0uLNUhc4XzluiselE75zkiSyau3_l1t1V1_R_Ur_gL0yJuh7LBcBFjgzwjgABj8RClSvbW4HMmAnS12JdP8asblw4IJm_tKvHEkIvFvDVm3w6STMCyAKogPL3f2a0uigVjjvu_Gfy-vSNPm1'
+DROPBOX_ACCESS_TOKEN = os.getenv('DROPBOX_ACCESS_TOKEN')
 
 def upload_to_dropbox(file_path, dropbox_path):
     """Uploads the file at file_path to Dropbox at dropbox_path."""
