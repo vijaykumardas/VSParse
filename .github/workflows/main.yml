@@ -1,9 +1,8 @@
 name: Run Python Script on Windows
 
 on:
-  push:
   schedule:
-    - cron: '30 14 * * *'  # 8:00 PM IST
+    - cron: '30 19 * * 6'  # Every Sunday at 1:00 AM IST
 
 jobs:
   run-script:
