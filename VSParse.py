@@ -11,21 +11,9 @@ import copy
 import time
 from bs4 import BeautifulSoup
 import dropbox
+from DropboxClient import DropboxClient
 logging.basicConfig(filename="ValueStocksProcess.Log",level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',datefmt='%d-%b-%y %H:%M:%S')
 
-
-# Dropbox access token (replace with your actual token)
-DROPBOX_ACCESS_TOKEN = os.getenv('DROPBOX_ACCESS_TOKEN')
-
-def upload_to_dropbox(file_path, dropbox_path):
-    """Uploads the file at file_path to Dropbox at dropbox_path."""
-    dbx = dropbox.Dropbox(DROPBOX_ACCESS_TOKEN)
-    
-    with open(file_path, 'rb') as f:
-        dbx.files_upload(f.read(), dropbox_path)
-    
-    print(f"File {file_path} successfully uploaded to Dropbox at {dropbox_path}")
-    logging.debug(f"File {file_path} successfully uploaded to Dropbox at {dropbox_path}")
 
 def GetNseEquityData():
     NSE_Equity_List_csv_url="https://archives.nseindia.com/content/equities/EQUITY_L.csv"
@@ -240,6 +228,7 @@ def GetStockAdvancedInfoFromDLevels1(row):
         logging.debug("FINISHED: Fetching Advanced Info for :"+rowBackup["SYMBOL"]+" having dlevelKey:"+rowBackup["DLEVEL_KEY"])
 
 def BuildAndSaveAdvancedDLevelInfo():
+    global dropboxClient
     now = datetime.datetime.now()
     nseEquityData = BuildAndSaveDLevelBasicInfo()
     
@@ -285,7 +274,7 @@ def BuildAndSaveAdvancedDLevelInfo():
 
             # Uploading the generated CSV to Dropbox
             dropbox_path = f"/NSEBSEBhavcopy/ValueStocks/{Dlevel_Advanced_info}"  # Adjust the Dropbox folder path as needed
-            upload_to_dropbox(Dlevel_Advanced_info, dropbox_path)
+            dropboxClient.upload_file(Dlevel_Advanced_info, dropbox_path)
 
         else:
             logging.debug("No data to write for Advanced Info CSV")
@@ -309,6 +298,8 @@ def BuildAndSaveAdvancedDLevelInfo():
     
 #row={"SYMBOL":"LTIM","NAME":"LTIMindtree Limited","DLEVEL_KEY":"lti_is_equity"}
 #GetStockAdvancedInfoFromDLevels1(row)
+global dropboxClient
+dropboxClient=DropboxClient()
 session = requests.Session()
 #BuildAndSaveDLevelBasicInfo()
 BuildAndSaveAdvancedDLevelInfo()
