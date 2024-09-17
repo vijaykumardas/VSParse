@@ -122,7 +122,7 @@ class DropboxClient:
         except Exception as e:
             logging.error(f"Unexpected error during file upload: {e}")
 
-    def download_file(self, dropbox_file_path, local_file_path):
+    def download_file(self, dropbox_file_path, local_file_path=None):
         """
         Download a file from Dropbox with retries.
 
@@ -130,7 +130,11 @@ class DropboxClient:
         :param local_file_path: Path where the file will be saved locally.
         """
         self._check_access_token()
-
+        # If local_file_path is not provided, construct it using the dropbox_file_path's file name
+        if local_file_path is None:
+            local_file_name = os.path.basename(dropbox_file_path)
+            local_file_path = os.path.join(os.getcwd(), local_file_name)
+            logging.info(f"No local_file_path provided. Using default path: {local_file_path}")
         def _download():
             metadata, res = self.dbx.files_download(dropbox_file_path)
             with open(local_file_path, 'wb') as file:
@@ -291,3 +295,30 @@ class DropboxClient:
         except Exception as e:
             logging.error(f"Unexpected error during fetching the most recent file: {e}")
             return None
+    def file_exists(self, dropbox_path):
+        """
+        Check if a file exists in Dropbox with retries.
+
+        :param dropbox_path: The path of the file in Dropbox.
+        :return: True if the file exists, False otherwise.
+        """
+        self._check_access_token()
+
+        def _check():
+            try:
+                self.dbx.files_get_metadata(dropbox_path)
+                logging.info(f"File exists in Dropbox: {dropbox_path}")
+                return True
+            except dropbox.exceptions.ApiError as e:
+                if isinstance(e.error, dropbox.files.GetMetadataError):
+                    logging.info(f"File does not exist in Dropbox: {dropbox_path}")
+                    return False
+                else:
+                    logging.error(f"Dropbox API error during file existence check: {e}")
+                    raise e
+
+        try:
+            return self._retry_operation(_check)
+        except Exception as e:
+            logging.error(f"Unexpected error during file existence check: {e}")
+            return False
