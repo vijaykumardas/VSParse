@@ -3,6 +3,9 @@ name: Run Python Script on Windows
 on:
   schedule:
     - cron: '30 19 * * 6'  # Every Sunday at 1:00 AM IST
+  push:
+   branches:
+     - main
 
 jobs:
   run-script:
