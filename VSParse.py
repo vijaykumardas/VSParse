@@ -229,7 +229,6 @@ def GetStockAdvancedInfoFromDLevels1(row):
 
 def BuildAndSaveAdvancedDLevelInfo(Dlevel_Advanced_info,Dlevel_Failed_Info):
     global dropboxClient
-    now = datetime.datetime.now()
     nseEquityData = BuildAndSaveDLevelBasicInfo()
     
     if len(nseEquityData) > 0:
@@ -367,6 +366,7 @@ global dropboxClient
 dropboxClient=DropboxClient()
 session = requests.Session()
 #BuildAndSaveDLevelBasicInfo()
+now = datetime.datetime.now()
 Dlevel_Advanced_info = now.strftime("%Y%m%d-%H%M%S") + '-3.DLEVEL_ADVANCED_INFO.CSV'
 Dlevel_Failed_Info = now.strftime("%Y%m%d-%H%M%S") + "-3.DLEVEL_ADVANCED_INFO_FAILURE.CSV"
 BuildAndSaveAdvancedDLevelInfo(Dlevel_Advanced_info,Dlevel_Failed_Info)
