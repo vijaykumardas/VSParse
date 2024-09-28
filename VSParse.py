@@ -227,7 +227,7 @@ def GetStockAdvancedInfoFromDLevels1(row):
     finally:
         logging.debug("FINISHED: Fetching Advanced Info for :"+rowBackup["SYMBOL"]+" having dlevelKey:"+rowBackup["DLEVEL_KEY"])
 
-def BuildAndSaveAdvancedDLevelInfo():
+def BuildAndSaveAdvancedDLevelInfo(Dlevel_Advanced_info,Dlevel_Failed_Info):
     global dropboxClient
     now = datetime.datetime.now()
     nseEquityData = BuildAndSaveDLevelBasicInfo()
@@ -240,8 +240,6 @@ def BuildAndSaveAdvancedDLevelInfo():
         logging.debug("DLevel Basic Info not available, Check if 02.MASTER_EQUITY_L_W_DLEVEL_INFO.CSV Exists and Contains the data")
         return
     
-    Dlevel_Advanced_info = now.strftime("%Y%m%d-%H%M%S") + '-3.DLEVEL_ADVANCED_INFO.CSV'
-    Dlevel_Failed_Info = now.strftime("%Y%m%d-%H%M%S") + "-3.DLEVEL_ADVANCED_INFO_FAILURE.CSV"
     csv_columns = ["SYMBOL", "NAME", "SECTOR", "CMP", "VALUATION", "FAIRRANGE", "PE", "SECTORPE", "MARKETCAP", "MKCAPTYPE", "TREND", "FUNDAMENTAL", "MOMENTUM", "DERATIO", "PRICETOSALES", "PLEDGE", "QBS", "QBS%", "AGS", "AGS%", "VALUATION_DCF", "VALUATION_GRAHAM", "VALUATION_EARNING", "VALUATION_BOOKVALUE", "VALUATION_SALES"]
     
     dLevelInfo = []
@@ -294,6 +292,73 @@ def BuildAndSaveAdvancedDLevelInfo():
     except IOError:
         logging.debug("I/O error while writing to " + Dlevel_Failed_Info)
 
+
+def GenerateAmibrokerTlsForFundamentals(file_path):
+    print("Starting the process of generating Amibroker TLS files.")
+    logging.info("Starting the process of generating Amibroker TLS files.")
+    
+    # Define the column names based on the provided CSV structure
+    column_names = [
+        'SYMBOL', 'NAME', 'SECTOR', 'CMP', 'VALUATION', 'FAIRRANGE', 'PE', 'SECTORPE',
+        'MARKETCAP', 'MKCAPTYPE', 'TREND', 'FUNDAMENTAL', 'MOMENTUM', 'DERATIO', 
+        'PRICETOSALES', 'PLEDGE', 'QBS', 'QBS%', 'AGS', 'AGS%', 'VALUATION_DCF', 
+        'VALUATION_GRAHAM', 'VALUATION_EARNING', 'VALUATION_BOOKVALUE', 'VALUATION_SALES'
+    ]
+    
+    try:
+        # Read the CSV file into a DataFrame
+        df = pd.read_csv(file_path, names=column_names, header=None)
+        print(f"Successfully read the CSV file: {file_path}")
+        logging.info(f"Successfully read the CSV file: {file_path}")
+    except Exception as e:
+        print(f"Error reading the CSV file: {file_path}. Exception: {e}")
+        logging.error(f"Error reading the CSV file: {file_path}. Exception: {e}")
+        return
+    
+    # Dictionary to map FUNDAMENTAL values to output filenames
+    fundamentals_to_files = {
+        "Good Fundamentals": "Good Fundamentals.tls",
+        "Great Fundamentals": "Great Fundamentals.tls",
+        "Moderate Fundamentals": "Moderate Fundamentals.tls",
+        "Poor Fundamentals": "Poor Fundamentals.tls"
+    }
+    
+    # Iterate over each fundamental type and write corresponding SYMBOL column to file
+    for fundamental, output_file in fundamentals_to_files.items():
+        try:
+            filtered_df = df[df['FUNDAMENTAL'] == fundamental]
+            
+            # Extract the SYMBOL column and save to a .tls file
+            filtered_df[['SYMBOL']].to_csv(output_file, index=False, header=False)
+            print(f"Wrote {len(filtered_df)} symbols to {output_file}")
+            logging.info(f"Wrote {len(filtered_df)} symbols to {output_file}")
+            dropbox_path = f"/NSEBSEBhavcopy/ValueStocks/{output_file}"  # Adjust the Dropbox folder path as needed
+            dropboxClient.upload_file(output_file, dropbox_path)
+            print(f'{output_file} Uploaded to Dropbox at : {dropbox_path}')
+            logging.info(f'{output_file} Uploaded to Dropbox at : {dropbox_path}')
+        except Exception as e:
+            print(f"Error writing to file: {output_file}. Exception: {e}")
+            logging.error(f"Error writing to file: {output_file}. Exception: {e}")
+    
+    # Create the "Great and Good Fundamentals" file
+    try:
+        output_file="Great and Good Fundamentals.tls"
+        great_and_good_df = df[df['FUNDAMENTAL'].isin(['Good Fundamentals', 'Great Fundamentals'])]
+        great_and_good_df[['SYMBOL']].to_csv(output_file, index=False, header=False)
+        print(f"Wrote {len(great_and_good_df)} symbols to {output_file}")
+        logging.info(f"Wrote {len(great_and_good_df)} symbols to {output_file}")
+        dropbox_path = f"/NSEBSEBhavcopy/ValueStocks/{output_file}"  # Adjust the Dropbox folder path as needed
+        dropboxClient.upload_file(output_file, dropbox_path)
+        print(f'{output_file} Uploaded to Dropbox at : {dropbox_path}')
+        logging.info(f'{output_file} Uploaded to Dropbox at : {dropbox_path}')
+    except Exception as e:
+        print(f"Error writing to Great and Good Fundamentals.tls. Exception: {e}")
+        logging.error(f"Error writing to Great and Good Fundamentals.tls. Exception: {e}")
+    
+    print("Files created successfully.")
+    logging.info("Process completed successfully.")
+
+
     
     
 #row={"SYMBOL":"LTIM","NAME":"LTIMindtree Limited","DLEVEL_KEY":"lti_is_equity"}
@@ -302,4 +367,7 @@ global dropboxClient
 dropboxClient=DropboxClient()
 session = requests.Session()
 #BuildAndSaveDLevelBasicInfo()
-BuildAndSaveAdvancedDLevelInfo()
+Dlevel_Advanced_info = now.strftime("%Y%m%d-%H%M%S") + '-3.DLEVEL_ADVANCED_INFO.CSV'
+Dlevel_Failed_Info = now.strftime("%Y%m%d-%H%M%S") + "-3.DLEVEL_ADVANCED_INFO_FAILURE.CSV"
+BuildAndSaveAdvancedDLevelInfo(Dlevel_Advanced_info,Dlevel_Failed_Info)
+GenerateAmibrokerTlsForFundamentals(Dlevel_Advanced_info)
