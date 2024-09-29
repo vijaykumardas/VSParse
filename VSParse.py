@@ -12,6 +12,7 @@ import time
 from bs4 import BeautifulSoup
 import dropbox
 from DropboxClient import DropboxClient
+import pandas as pd
 logging.basicConfig(filename="ValueStocksProcess.Log",level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',datefmt='%d-%b-%y %H:%M:%S')
 
 
