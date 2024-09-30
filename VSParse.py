@@ -332,7 +332,7 @@ def GenerateAmibrokerTlsForFundamentals(file_path):
             filtered_df[['SYMBOL']].to_csv(output_file, index=False, header=False)
             print(f"Wrote {len(filtered_df)} symbols to {output_file}")
             logging.info(f"Wrote {len(filtered_df)} symbols to {output_file}")
-            dropbox_path = f"/NSEBSEBhavcopy/ValueStocks/{output_file}"  # Adjust the Dropbox folder path as needed
+            dropbox_path = f"/NSEBSEBhavcopy/Amibroker_Watchlists/{output_file}"  # Adjust the Dropbox folder path as needed
             dropboxClient.upload_file(output_file, dropbox_path)
             print(f'{output_file} Uploaded to Dropbox at : {dropbox_path}')
             logging.info(f'{output_file} Uploaded to Dropbox at : {dropbox_path}')
@@ -347,7 +347,7 @@ def GenerateAmibrokerTlsForFundamentals(file_path):
         great_and_good_df[['SYMBOL']].to_csv(output_file, index=False, header=False)
         print(f"Wrote {len(great_and_good_df)} symbols to {output_file}")
         logging.info(f"Wrote {len(great_and_good_df)} symbols to {output_file}")
-        dropbox_path = f"/NSEBSEBhavcopy/ValueStocks/{output_file}"  # Adjust the Dropbox folder path as needed
+        dropbox_path = f"/NSEBSEBhavcopy/Amibroker_Watchlists/{output_file}"  # Adjust the Dropbox folder path as needed
         dropboxClient.upload_file(output_file, dropbox_path)
         print(f'{output_file} Uploaded to Dropbox at : {dropbox_path}')
         logging.info(f'{output_file} Uploaded to Dropbox at : {dropbox_path}')
