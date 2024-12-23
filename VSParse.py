@@ -317,10 +317,10 @@ def GenerateAmibrokerTlsForFundamentals(file_path):
     
     # Dictionary to map FUNDAMENTAL values to output filenames
     fundamentals_to_files = {
-        "Good Fundamentals": "Good Fundamentals.tls",
-        "Great Fundamentals": "Great Fundamentals.tls",
-        "Moderate Fundamentals": "Moderate Fundamentals.tls",
-        "Poor Fundamentals": "Poor Fundamentals.tls"
+        "Good Financials": "Good Fundamentals.tls",
+        "Great Financials": "Great Fundamentals.tls",
+        "Moderate Financials": "Moderate Fundamentals.tls",
+        "Poor Financials": "Poor Fundamentals.tls"
     }
     
     # Iterate over each fundamental type and write corresponding SYMBOL column to file
@@ -343,7 +343,7 @@ def GenerateAmibrokerTlsForFundamentals(file_path):
     # Create the "Great and Good Fundamentals" file
     try:
         output_file="Great and Good Fundamentals.tls"
-        great_and_good_df = df[df['FUNDAMENTAL'].isin(['Good Fundamentals', 'Great Fundamentals'])]
+        great_and_good_df = df[df['FUNDAMENTAL'].isin(['Good Financials', 'Great Financials'])]
         great_and_good_df[['SYMBOL']].to_csv(output_file, index=False, header=False)
         print(f"Wrote {len(great_and_good_df)} symbols to {output_file}")
         logging.info(f"Wrote {len(great_and_good_df)} symbols to {output_file}")
