@@ -370,7 +370,9 @@ session = requests.Session()
 now = datetime.datetime.now()
 Dlevel_Advanced_info = now.strftime("%Y%m%d-%H%M%S") + '-3.DLEVEL_ADVANCED_INFO.CSV'
 Dlevel_Failed_Info = now.strftime("%Y%m%d-%H%M%S") + "-3.DLEVEL_ADVANCED_INFO_FAILURE.CSV"
-#BuildAndSaveAdvancedDLevelInfo(Dlevel_Advanced_info,Dlevel_Failed_Info)
-dropboxClient.download_file("/NSEBSEBhavCopy/ValueStocks/20250104-193904-3.DLEVEL_ADVANCED_INFO.CSV")
-Dlevel_Advanced_info="20250104-193904-3.DLEVEL_ADVANCED_INFO.CSV"
+BuildAndSaveAdvancedDLevelInfo(Dlevel_Advanced_info,Dlevel_Failed_Info)
+
+# Test Code Below to download the File From DropBox and Build Amibroker TLS
+#dropboxClient.download_file("/NSEBSEBhavCopy/ValueStocks/20250104-193904-3.DLEVEL_ADVANCED_INFO.CSV")
+#Dlevel_Advanced_info="20250104-193904-3.DLEVEL_ADVANCED_INFO.CSV"
 GenerateAmibrokerTlsForFundamentals(Dlevel_Advanced_info)
