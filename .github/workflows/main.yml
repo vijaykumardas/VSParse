@@ -7,8 +7,8 @@ on:
             description: 'An example input'
             required: false
             default: 'default_value'
-  schedule:
-    - cron: '30 19 * * 6'  # Every Sunday at 1:00 AM IST
+  #schedule:
+  #  - cron: '30 19 * * 6'  # Every Sunday at 1:00 AM IST
 
 
 jobs:
