@@ -195,6 +195,7 @@ def GetStockAdvancedInfoFromDLevels1(row):
         #    logging.debug("Exception during Reading Valuation Data"+Argument)
         
         return {
+        "DATENUM":datetime.now().strftime('%Y%m%d'),
         "DATE": datetime.now().strftime('%d-%b-%Y'),
         "SYMBOL":rowBackup["SYMBOL"],
         "NAME":rowBackup["NAME"],
@@ -241,7 +242,7 @@ def BuildAndSaveAdvancedDLevelInfo(Dlevel_Advanced_info,Dlevel_Failed_Info):
         logging.debug("DLevel Basic Info not available, Check if 02.MASTER_EQUITY_L_W_DLEVEL_INFO.CSV Exists and Contains the data")
         return
     
-    csv_columns = ["DATE", "SYMBOL", "NAME", "SECTOR", "CMP", "VALUATION", "FAIRRANGE", "PE", "SECTORPE", "MARKETCAP", "MKCAPTYPE", "TREND", "FUNDAMENTAL", "MOMENTUM", "DERATIO", "PRICETOSALES", "PLEDGE", "QBS", "QBS%", "AGS", "AGS%", "VALUATION_DCF", "VALUATION_GRAHAM", "VALUATION_EARNING", "VALUATION_BOOKVALUE", "VALUATION_SALES"]
+    csv_columns = ["DATENUM","DATE", "SYMBOL", "NAME", "SECTOR", "CMP", "VALUATION", "FAIRRANGE", "PE", "SECTORPE", "MARKETCAP", "MKCAPTYPE", "TREND", "FUNDAMENTAL", "MOMENTUM", "DERATIO", "PRICETOSALES", "PLEDGE", "QBS", "QBS%", "AGS", "AGS%", "VALUATION_DCF", "VALUATION_GRAHAM", "VALUATION_EARNING", "VALUATION_BOOKVALUE", "VALUATION_SALES"]
     
     dLevelInfo = []
     dLevelInfoFailure = []
