@@ -195,6 +195,7 @@ def GetStockAdvancedInfoFromDLevels1(row):
         #    logging.debug("Exception during Reading Valuation Data"+Argument)
         
         return {
+        "DATE": datetime.now().strftime('%d-%b-%Y'),
         "SYMBOL":rowBackup["SYMBOL"],
         "NAME":rowBackup["NAME"],
         "SECTOR":rowBackup["SECTOR"],
@@ -240,7 +241,7 @@ def BuildAndSaveAdvancedDLevelInfo(Dlevel_Advanced_info,Dlevel_Failed_Info):
         logging.debug("DLevel Basic Info not available, Check if 02.MASTER_EQUITY_L_W_DLEVEL_INFO.CSV Exists and Contains the data")
         return
     
-    csv_columns = ["SYMBOL", "NAME", "SECTOR", "CMP", "VALUATION", "FAIRRANGE", "PE", "SECTORPE", "MARKETCAP", "MKCAPTYPE", "TREND", "FUNDAMENTAL", "MOMENTUM", "DERATIO", "PRICETOSALES", "PLEDGE", "QBS", "QBS%", "AGS", "AGS%", "VALUATION_DCF", "VALUATION_GRAHAM", "VALUATION_EARNING", "VALUATION_BOOKVALUE", "VALUATION_SALES"]
+    csv_columns = ["DATE", "SYMBOL", "NAME", "SECTOR", "CMP", "VALUATION", "FAIRRANGE", "PE", "SECTORPE", "MARKETCAP", "MKCAPTYPE", "TREND", "FUNDAMENTAL", "MOMENTUM", "DERATIO", "PRICETOSALES", "PLEDGE", "QBS", "QBS%", "AGS", "AGS%", "VALUATION_DCF", "VALUATION_GRAHAM", "VALUATION_EARNING", "VALUATION_BOOKVALUE", "VALUATION_SALES"]
     
     dLevelInfo = []
     dLevelInfoFailure = []
@@ -259,7 +260,7 @@ def BuildAndSaveAdvancedDLevelInfo(Dlevel_Advanced_info,Dlevel_Failed_Info):
             dLevelInfoFailure.append(row)
             logging.debug("Some Exception while fetching the Advanced Info for :" + row["SYMBOL"])
             logging.debug("Exception: " + str(Argument))
-
+    
     # Writing advanced stock info to CSV
     try:
         if len(dLevelInfo) > 0:
@@ -299,7 +300,7 @@ def GenerateAmibrokerTlsForFundamentals(file_path):
     
     # Define the column names based on the provided CSV structure
     column_names = [
-        'SYMBOL', 'NAME', 'SECTOR', 'CMP', 'VALUATION', 'FAIRRANGE', 'PE', 'SECTORPE',
+        'DATE','SYMBOL', 'NAME', 'SECTOR', 'CMP', 'VALUATION', 'FAIRRANGE', 'PE', 'SECTORPE',
         'MARKETCAP', 'MKCAPTYPE', 'TREND', 'FUNDAMENTAL', 'MOMENTUM', 'DERATIO', 
         'PRICETOSALES', 'PLEDGE', 'QBS', 'QBS%', 'AGS', 'AGS%', 'VALUATION_DCF', 
         'VALUATION_GRAHAM', 'VALUATION_EARNING', 'VALUATION_BOOKVALUE', 'VALUATION_SALES'
